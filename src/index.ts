@@ -1,4 +1,4 @@
-import "reflect-metadata"
+import "reflect-metadata";
 import { MikroORM } from "@mikro-orm/core";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
@@ -36,7 +36,7 @@ const main = async () => {
   app.listen(4000, () => {
     console.log("Server started");
   });
-}
+};
 
 main().catch((err) => {
   console.error(err);
