@@ -15,20 +15,21 @@ for root, dirs, files in os.walk("./dist/"):
     for subs in dirs:
         target_directories.append(subs)
 
+print("Checking Directories")
 if (len(source_directories) == len(target_directories)):
     print('Successful directory checks')
 
 else:
     def delta_check(source, targ):
         s = set(targ)
-        deltas = [x for x in source_directories if x not in s]
+        deltas = [x for x in source if x not in s]
         if (len(deltas) != 0):
             return deltas
         else:
             from collections import Counter
             duplicates = Counter()
-            for dups in source_directories:
-                duplicates[dups] = target_directories.count(dups)
+            for dups in source:
+                duplicates[dups] = targ.count(dups)
             return duplicates
 
     print('Mismatched directory count \n')
