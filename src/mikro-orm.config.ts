@@ -4,7 +4,7 @@ import { __prod__ } from "./constants";
 import { MikroORM } from "@mikro-orm/core";
 
 import { Post } from "./entities/post";
-import { User } from "./entities/User";
+import { Account } from "./entities/Account";
 
 export default {
   dbName: process.env.DB_NAME,
@@ -16,5 +16,5 @@ export default {
     path: path.join(__dirname, "./migrations"),
     pattern: /^[\w-]+\d+\.[tj]s$/,
   },
-  entities: [Post, User],
+  entities: [Post, Account],
 } as Parameters<typeof MikroORM.init>[0];
