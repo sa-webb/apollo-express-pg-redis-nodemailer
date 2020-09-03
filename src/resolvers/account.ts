@@ -10,7 +10,7 @@ import {
 } from "type-graphql";
 import argon2 from "argon2";
 import { MyContext } from "../types";
-import { User } from "../entities/User";
+import { Account } from "../entities/Account";
 import { EntityManager } from "@mikro-orm/postgresql";
 
 @InputType()
@@ -34,18 +34,18 @@ class UserResponse {
   @Field(() => [FieldError], { nullable: true })
   errors?: FieldError[];
 
-  @Field(() => User, { nullable: true })
-  user?: User;
+  @Field(() => Account, { nullable: true })
+  user?: Account;
 }
 
 @Resolver()
-export class UserResolver {
-  @Query(() => User, { nullable: true })
+export class AccountResolver {
+  @Query(() => Account, { nullable: true })
   async me(@Ctx() { req, em }: MyContext) {
     if (!req.session.userId) {
       return null;
     }
-    const user = await em.findOne(User, { id: req.session.userId });
+    const user = await em.findOne(Account, { id: req.session.userId });
     return user;
   }
 
@@ -79,8 +79,8 @@ export class UserResolver {
     const hashedPassword = await argon2.hash(options.password);
     let user;
     try {
-      const result = (em as EntityManager)
-        .createQueryBuilder(User)
+      const result = await (em as EntityManager)
+        .createQueryBuilder(Account)
         .getKnexQuery()
         .insert({
           username: options.username,
@@ -112,7 +112,7 @@ export class UserResolver {
     @Arg("options") options: UsernamePasswordInput,
     @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
-    const user = await em.findOne(User, { username: options.username });
+    const user = await em.findOne(Account, { username: options.username });
     if (!user) {
       return {
         errors: [
