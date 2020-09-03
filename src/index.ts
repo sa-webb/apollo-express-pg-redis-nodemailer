@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import express from "express";
-import cors from 'cors'
+import cors from "cors";
 import redis from "redis";
 import session from "express-session";
 import connectRedis from "connect-redis";
@@ -12,21 +12,23 @@ import { __prod__ } from "./constants";
 
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
-import { UserResolver } from "./resolvers/user";
+import { AccountResolver } from "./resolvers/account";
 
 const main = async () => {
   const orm = await MikroORM.init(mikroOrmConfig);
   await orm.getMigrator().up();
 
+  const app = express();
+
   const RedisStore = connectRedis(session);
   const redisClient = redis.createClient();
 
-  const app = express();
-
-  app.use(cors({
-    origin: "http://localhost:3000",
-    credentials: true
-  }))
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
 
   app.use(
     session({
@@ -50,7 +52,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, PostResolver, UserResolver],
+      resolvers: [HelloResolver, PostResolver, AccountResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({
@@ -62,7 +64,7 @@ const main = async () => {
 
   apolloServer.applyMiddleware({
     app,
-    cors: false
+    cors: false,
   });
 
   app.listen(4000, () => {
