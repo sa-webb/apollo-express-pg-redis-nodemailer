@@ -12,6 +12,7 @@ import argon2 from "argon2";
 import { MyContext } from "../types";
 import { Account } from "../entities/Account";
 import { EntityManager } from "@mikro-orm/postgresql";
+import { COOKIE_NAME } from "../constants";
 
 @InputType()
 class UsernamePasswordInput {
@@ -91,7 +92,7 @@ export class AccountResolver {
         .returning("*");
       user = result[0];
     } catch (err) {
-      console.log(err)
+      console.log(err);
       if (err.code === "23505") {
         return {
           errors: [
@@ -138,5 +139,19 @@ export class AccountResolver {
     req.session.userId = user.id;
 
     return { user };
+  }
+
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: MyContext) {
+    return new Promise((resolve) => {
+      req.session.destroy((err) => {
+        res.clearCookie(COOKIE_NAME);
+        if (err) {
+          console.log(err);
+          return;
+        }
+        resolve(true);
+      });
+    });
   }
 }
