@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import express from "express";
 import cors from "cors";
-import redis from "redis";
+import Redis from "ioredis";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import mikroOrmConfig from "./mikro-orm.config";
@@ -19,7 +19,7 @@ const main = async () => {
   await orm.getMigrator().up();
   const app = express();
   const RedisStore = connectRedis(session);
-  const redisClient = redis.createClient();
+  const redis = new Redis();
 
   app.use(
     cors({
@@ -31,7 +31,7 @@ const main = async () => {
   app.use(
     session({
       name: COOKIE_NAME,
-      store: new RedisStore({ client: redisClient, disableTouch: true }),
+      store: new RedisStore({ client: redis, disableTouch: true }),
       secret: "ligftrdrtdfkyg",
       resave: false,
       saveUninitialized: false,
@@ -57,6 +57,7 @@ const main = async () => {
       em: orm.em,
       req,
       res,
+      redis,
     }),
   });
 
