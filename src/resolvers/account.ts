@@ -107,8 +107,8 @@ export class AccountResolver {
       return {
         errors: [
           {
-            field: "username",
-            message: "username does not exist",
+            field: "usernameOrEmail",
+            message: "username or email does not exist",
           },
         ],
       };
