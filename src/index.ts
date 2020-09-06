@@ -17,9 +17,7 @@ import { AccountResolver } from "./resolvers/account";
 const main = async () => {
   const orm = await MikroORM.init(mikroOrmConfig);
   await orm.getMigrator().up();
-
   const app = express();
-
   const RedisStore = connectRedis(session);
   const redisClient = redis.createClient();
 
