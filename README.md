@@ -1,18 +1,24 @@
-# lireddit clone
+# Apollo Auth Starter
 
-## Type-GraphQL
+Apollo Express Server
+MikroORM
+Postgresql
+Redis
+GraphQL
+Type-GraphQL
 
-Explicit type setting for nullable values.
-@Field(() => [Error], { nullable: true })
+## Getting Started
 
-## Connect to Postgres
+1. Clone the repository
+2. Install dependencies
+3. Create and populate .env
+4. Activate Postgres & Redis
+5. execute `yarn create:migration` to sync db
+6. execute `yarn watch` to transpile into `dist/`
+7. execute `yarn dev` to run the server
 
-Launch Postgres
-`/Applications/Postgres.app/Contents/Versions/12/bin/psql -p5432 "austin"`
-Connect to DB
-\c <db_name>
+### Nodemailer
 
-## Connect to Redis
-
-1. `brew services start redis`
-2. `redis-server`
+1. Config `src/utils/sendEmail.ts` to generate example account (read comments)
+2. Call sendMail("email@example.com", "html string") inside of bootStrap() in `src/index.ts`
+3. Config the generated accounts credentials in the sendEmail
