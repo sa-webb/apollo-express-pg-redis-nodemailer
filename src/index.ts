@@ -4,8 +4,6 @@ import cors from "cors";
 import Redis from "ioredis";
 import session from "express-session";
 import connectRedis from "connect-redis";
-import mikroOrmConfig from "./mikro-orm.config";
-import { MikroORM } from "@mikro-orm/core";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { __prod__, COOKIE_NAME } from "./constants";
@@ -14,9 +12,23 @@ import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
 import { AccountResolver } from "./resolvers/account";
 
+import { createConnection } from "typeorm";
+import { Account } from "./entities/Account";
+import { Post } from "./entities/post";
+
 const main = async () => {
-  const orm = await MikroORM.init(mikroOrmConfig);
-  await orm.getMigrator().up();
+  await createConnection({
+    type: "postgres",
+    database: "lireddit2",
+    username: "austin",
+    password: "",
+    host: "localhost",
+    port: 5432,
+    synchronize: true,
+    logging: true,
+    entities: [Account, Post],
+  });
+
   const app = express();
   const RedisStore = connectRedis(session);
   const redis = new Redis();
@@ -54,7 +66,6 @@ const main = async () => {
       validate: false,
     }),
     context: ({ req, res }) => ({
-      em: orm.em,
       req,
       res,
       redis,
