@@ -1,4 +1,6 @@
 import "reflect-metadata";
+import dotenv from 'dotenv'
+dotenv.config()
 import express from "express";
 import cors from "cors";
 import Redis from "ioredis";
@@ -19,9 +21,9 @@ import { Post } from "./entities/post";
 const main = async () => {
   await createConnection({
     type: "postgres",
-    database: "lireddit2",
-    username: "austin",
-    password: "",
+    database: process.env.DB_NAME,
+    username: process.env.USER,
+    password: process.env.PASSWORD,
     host: "localhost",
     port: 5432,
     synchronize: true,
